@@ -94,19 +94,113 @@
 
   <div class="console-card-group-reward" th:if="${theme.config.aboutReward.reward.enable_reward}">
     <ul class="reward-all console-card">
-      <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.wxPay}}"
-                                 rel="external nofollow noreferrer" target="_blank" draggable="false"><img
-              class=" entered loaded" alt="微信"
-              th:src="${theme.config.aboutReward.reward.wxPay}"></a>
+      <!-- 微信收款码 - 只有上传了才显示 -->
+      <li class="reward-item" th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.wxPay)}">
+        <a th:href="@{${theme.config.aboutReward.reward.wxPay}}"
+           rel="external nofollow noreferrer" target="_blank" draggable="false">
+          <img class="entered loaded" alt="微信" th:src="${theme.config.aboutReward.reward.wxPay}">
+        </a>
         <div class="post-qr-code-desc">微信</div>
       </li>
-      <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.alipay}}"
-                                 rel="external nofollow noreferrer" target="_blank" draggable="false"><img
-              class=" entered loaded" alt="支付宝"
-              th:src="${theme.config.aboutReward.reward.alipay}"></a>
+      <!-- 支付宝收款码 - 只有上传了才显示 -->
+      <li class="reward-item" th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.alipay)}">
+        <a th:href="@{${theme.config.aboutReward.reward.alipay}}"
+           rel="external nofollow noreferrer" target="_blank" draggable="false">
+          <img class="entered loaded" alt="支付宝" th:src="${theme.config.aboutReward.reward.alipay}">
+        </a>
         <div class="post-qr-code-desc">支付宝</div>
       </li>
+      <!-- 数字货币 - 只有上传了二维码且填写了钱包地址才显示 -->
+      <li class="reward-item crypto-reward" 
+          th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.cryptoQrCode) and not #strings.isEmpty(theme.config.aboutReward.reward.cryptoAddress)}">
+        <a th:href="@{${theme.config.aboutReward.reward.cryptoQrCode}}"
+           rel="external nofollow noreferrer" target="_blank" draggable="false">
+          <img class="entered loaded" alt="数字货币" th:src="${theme.config.aboutReward.reward.cryptoQrCode}">
+        </a>
+        <div class="post-qr-code-desc">[[${theme.config.aboutReward.reward.cryptoNetwork}]]</div>
+        <div class="crypto-address-wrapper">
+          <input type="text" class="crypto-address-input" readonly 
+                 th:value="${theme.config.aboutReward.reward.cryptoAddress}" 
+                 th:id="'crypto-address-' + ${#ids.seq('crypto')}">
+          <button class="crypto-copy-btn" onclick="copyWalletAddress(this)" title="复制钱包地址">
+            <i class="haofont hao-icon-copy"></i>
+          </button>
+        </div>
+      </li>
     </ul>
+    <script>
+      function copyWalletAddress(btn) {
+        const input = btn.previousElementSibling;
+        input.select();
+        input.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(input.value).then(function() {
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<i class="haofont hao-icon-circle-check"></i>';
+          btn.style.color = '#52c41a';
+          setTimeout(function() {
+            btn.innerHTML = originalHTML;
+            btn.style.color = '';
+          }, 2000);
+        }).catch(function() {
+          document.execCommand('copy');
+          const originalHTML = btn.innerHTML;
+          btn.innerHTML = '<i class="haofont hao-icon-circle-check"></i>';
+          btn.style.color = '#52c41a';
+          setTimeout(function() {
+            btn.innerHTML = originalHTML;
+            btn.style.color = '';
+          }, 2000);
+        });
+      }
+    </script>
+    <style>
+      .crypto-reward {
+        min-width: 200px;
+      }
+      .crypto-address-wrapper {
+        display: flex;
+        align-items: center;
+        margin-top: 8px;
+        padding: 0 8px;
+        gap: 6px;
+      }
+      .crypto-address-input {
+        flex: 1;
+        padding: 6px 10px;
+        font-size: 11px;
+        font-family: 'Monaco', 'Consolas', monospace;
+        border: 1px solid var(--heo-card-border);
+        border-radius: 6px;
+        background: var(--heo-card-bg);
+        color: var(--heo-fontcolor);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .crypto-copy-btn {
+        flex-shrink: 0;
+        padding: 6px 10px;
+        border: none;
+        border-radius: 6px;
+        background: var(--heo-main);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .crypto-copy-btn:hover {
+        opacity: 0.85;
+        transform: scale(1.05);
+      }
+      .crypto-copy-btn:active {
+        transform: scale(0.95);
+      }
+      .crypto-copy-btn i {
+        font-size: 14px;
+      }
+    </style>
   </div>
   <div class="button-group">
     <div class="console-btn-item">
