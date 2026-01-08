@@ -129,8 +129,10 @@
     <!-- 数字货币打赏样式和脚本 -->
     <th:block th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.cryptoQrCode) and not #strings.isEmpty(theme.config.aboutReward.reward.cryptoAddress)}">
     <style>
-        .crypto-reward-post { min-width: 180px; }
+        .crypto-reward-post { min-width: 180px; text-align: center; }
+        .crypto-reward-post .post-qr-code-desc { text-align: center; }
         .crypto-address-post-wrapper {
+            justify-content: center;
             display: flex;
             align-items: center;
             margin-top: 8px;
