@@ -2516,6 +2516,23 @@ spec:
               help: 支付宝二维码图片链接
               width: "15rem"
               placeholder: 请填写支付宝二维码图片链接
+            - $formkit: attachment
+              name: cryptoQrCode
+              label: 数字货币收款码
+              help: 数字货币二维码图片链接（如 USDT、ETH 等）
+              width: "15rem"
+              placeholder: 请填写数字货币二维码图片链接
+            - $formkit: text
+              name: cryptoAddress
+              label: EVM 钱包地址
+              help: 填写 EVM 兼容链钱包地址（ETH/BSC/Polygon 等），用户可直接复制
+              placeholder: 请填写钱包地址，如 0x...
+            - $formkit: text
+              name: cryptoNetwork
+              label: 支持的网络
+              help: 填写支持的区块链网络名称
+              placeholder: 如：ETH / BSC / Polygon / Arbitrum
+              value: BSC / Pol / Arb / Op / Base
         - $formkit: text
           if: $get(aboutRewardEnable).value
           name: rewardNumber
