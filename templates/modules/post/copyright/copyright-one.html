@@ -27,17 +27,34 @@
                         <div class="reward-main">
                             <ul class="reward-all"><span class="reward-title">感谢你赐予我前进的力量</span>
                                 <ul class="reward-group">
-                                    <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.wxPay}}"
-                                                               target="_blank">
-                                        <img alt="微信" class="post-qr-code-img"
-                                             th:src="${theme.config.aboutReward.reward.wxPay}"></a>
+                                    <!-- 微信收款码 - 只有上传了才显示 -->
+                                    <li class="reward-item" th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.wxPay)}">
+                                        <a th:href="@{${theme.config.aboutReward.reward.wxPay}}" target="_blank">
+                                            <img alt="微信" class="post-qr-code-img" th:src="${theme.config.aboutReward.reward.wxPay}">
+                                        </a>
                                         <div class="post-qr-code-desc">微信</div>
                                     </li>
-                                    <li class="reward-item"><a th:href="@{${theme.config.aboutReward.reward.alipay}}"
-                                                               target="_blank"><img alt="支付宝"
-                                                                                    class="post-qr-code-img"
-                                                                                    th:src="${theme.config.aboutReward.reward.alipay}"></a>
+                                    <!-- 支付宝收款码 - 只有上传了才显示 -->
+                                    <li class="reward-item" th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.alipay)}">
+                                        <a th:href="@{${theme.config.aboutReward.reward.alipay}}" target="_blank">
+                                            <img alt="支付宝" class="post-qr-code-img" th:src="${theme.config.aboutReward.reward.alipay}">
+                                        </a>
                                         <div class="post-qr-code-desc">支付宝</div>
+                                    </li>
+                                    <!-- 数字货币 - 只有上传了二维码且填写了钱包地址才显示 -->
+                                    <li class="reward-item crypto-reward-post" 
+                                        th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.cryptoQrCode) and not #strings.isEmpty(theme.config.aboutReward.reward.cryptoAddress)}">
+                                        <a th:href="@{${theme.config.aboutReward.reward.cryptoQrCode}}" target="_blank">
+                                            <img alt="数字货币" class="post-qr-code-img" th:src="${theme.config.aboutReward.reward.cryptoQrCode}">
+                                        </a>
+                                        <div class="post-qr-code-desc">[[${theme.config.aboutReward.reward.cryptoNetwork}]]</div>
+                                        <div class="crypto-address-post-wrapper">
+                                            <input type="text" class="crypto-address-post-input" readonly 
+                                                   th:value="${theme.config.aboutReward.reward.cryptoAddress}">
+                                            <button class="crypto-copy-post-btn" onclick="copyWalletAddressPost(this)" title="复制钱包地址">
+                                                <i class="haofont hao-icon-copy"></i>
+                                            </button>
+                                        </div>
                                     </li>
                                 </ul>
                                 <a class="reward-main-btn" th:href="@{${theme.config.aboutReward.reward.reward_md_url}}"
@@ -103,4 +120,77 @@
         </div>
     </div>
     <link rel="stylesheet" th:href="${assets_link + '/css/post-copyright-one.css' + theme_version}">
+    <!-- 数字货币打赏样式和脚本 -->
+    <th:block th:if="${not #strings.isEmpty(theme.config.aboutReward.reward.cryptoQrCode) and not #strings.isEmpty(theme.config.aboutReward.reward.cryptoAddress)}">
+    <style>
+        .crypto-reward-post { min-width: 180px; }
+        .crypto-address-post-wrapper {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            padding: 0 6px;
+            gap: 4px;
+        }
+        .crypto-address-post-input {
+            flex: 1;
+            padding: 5px 8px;
+            font-size: 10px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            border: 1px solid var(--heo-card-border);
+            border-radius: 5px;
+            background: var(--heo-card-bg);
+            color: var(--heo-fontcolor);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 100px;
+        }
+        .crypto-copy-post-btn {
+            flex-shrink: 0;
+            padding: 5px 8px;
+            border: none;
+            border-radius: 5px;
+            background: var(--heo-main);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .crypto-copy-post-btn:hover {
+            opacity: 0.85;
+            transform: scale(1.05);
+        }
+        .crypto-copy-post-btn:active {
+            transform: scale(0.95);
+        }
+        .crypto-copy-post-btn i { font-size: 12px; }
+    </style>
+    <script>
+        function copyWalletAddressPost(btn) {
+            const input = btn.previousElementSibling;
+            input.select();
+            input.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(input.value).then(function() {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="haofont hao-icon-circle-check"></i>';
+                btn.style.color = '#52c41a';
+                setTimeout(function() {
+                    btn.innerHTML = originalHTML;
+                    btn.style.color = '';
+                }, 2000);
+            }).catch(function() {
+                document.execCommand('copy');
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<i class="haofont hao-icon-circle-check"></i>';
+                btn.style.color = '#52c41a';
+                setTimeout(function() {
+                    btn.innerHTML = originalHTML;
+                    btn.style.color = '';
+                }, 2000);
+            });
+        }
+    </script>
+    </th:block>
 </th:block>
