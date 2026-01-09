@@ -36,32 +36,49 @@
 
             </div>
         </th:block>
-        <th:block th:if="${not #lists.isEmpty(menuFinder.getPrimary().menuItems) && theme.config.nav.menus.phone_menu}"
-        >
+        <th:block th:if="${not #lists.isEmpty(menuFinder.getPrimary().menuItems) && theme.config.nav.menus.phone_menu}">
+            <span class="sidebar-menu-item-title">导航</span>
             <div class="menus_items">
                 <div class="menus_item" th:each="menuItem : ${menuFinder.getPrimary().menuItems}">
+                    <!-- 有子菜单：显示可展开的菜单 -->
                     <th:block th:if="${not #lists.isEmpty(menuItem.children)}">
                         <a class="site-page" href="javascript:void(0);" rel="external nofollow">
                             <span th:text="${menuItem.status.displayName}"></span>
+                            <i class="haofont hao-icon-angle-down" style="font-size: 0.8rem; margin-left: 4px;"></i>
                         </a>
-                        <th:block th:if="${not #lists.isEmpty(menuItem.children)}">
-                            <ul class="menus_item_child">
-                                <li th:each="childMenu : ${menuItem.children}">
-                                    <a class="site-page child" th:href="@{${childMenu.status.href}}">
-                                        <th:block th:if="${!theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
-                                            <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(childMenu, 'icon', ''))}"
-                                               th:class="${#annotations.getOrDefault(childMenu, 'icon', '')}"></i>
-                                        </th:block>
-                                        <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
-                                            <svg class="ali_icon" aria-hidden="true">
-                                                <use th:href="${#annotations.getOrDefault(childMenu, 'icon','jiewen joe-icon-zuzhijiagou')}"></use>
-                                            </svg>
-                                        </th:block>
-                                        <span th:text="${childMenu.status.displayName}"></span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </th:block>
+                        <ul class="menus_item_child">
+                            <li th:each="childMenu : ${menuItem.children}">
+                                <a class="site-page child" th:href="@{${childMenu.status.href}}">
+                                    <th:block th:if="${!theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
+                                        <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(childMenu, 'icon', ''))}"
+                                           th:class="${#annotations.getOrDefault(childMenu, 'icon', '')}"></i>
+                                    </th:block>
+                                    <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
+                                        <svg class="ali_icon" aria-hidden="true">
+                                            <use th:href="${#annotations.getOrDefault(childMenu, 'icon','jiewen joe-icon-zuzhijiagou')}"></use>
+                                        </svg>
+                                    </th:block>
+                                    <span th:text="${childMenu.status.displayName}"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </th:block>
+                    <!-- 无子菜单：直接显示为链接 -->
+                    <th:block th:if="${#lists.isEmpty(menuItem.children)}">
+                        <a class="site-page" th:href="@{${menuItem.status.href}}" rel="external nofollow">
+                            <th:block th:if="${!theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
+                                <i th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}"
+                                   th:class="${#annotations.getOrDefault(menuItem, 'icon', '')}"
+                                   style="margin-right: 6px;"></i>
+                            </th:block>
+                            <th:block th:if="${theme.config.nav.menus.enable_ali_iconfont_symbol_header}">
+                                <svg th:if="${!#strings.isEmpty(#annotations.getOrDefault(menuItem, 'icon', ''))}" 
+                                     class="ali_icon" aria-hidden="true" style="margin-right: 6px;">
+                                    <use th:href="${#annotations.getOrDefault(menuItem, 'icon','')}"></use>
+                                </svg>
+                            </th:block>
+                            <span th:text="${menuItem.status.displayName}"></span>
+                        </a>
                     </th:block>
                 </div>
             </div>
