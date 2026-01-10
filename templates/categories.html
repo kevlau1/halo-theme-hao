@@ -7,6 +7,20 @@
                 _cover = ${theme.config.other.opengraph.image},
                 _excerpt = ${site.seo.description},
                 _type = 'website')}"></th:block>
+    <!-- Sticky Footer 样式 -->
+    <style>
+        .page#body-wrap {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .page#body-wrap > main#content-inner {
+            flex: 1 0 auto;
+        }
+        .page#body-wrap > footer#footer {
+            flex-shrink: 0;
+        }
+    </style>
 </th:block>
 <th:block th:fragment="content">
 
